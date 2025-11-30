@@ -1,10 +1,8 @@
 import "./style.css";
 
-// Counter state
 let counter: number = 0;
 const unitLabel = "hearts";
 
-// Main container
 const container = document.createElement("div");
 
 container.innerHTML = `
@@ -14,24 +12,40 @@ container.innerHTML = `
 
 document.body.appendChild(container);
 
-// Get elements
 const button = document.getElementById("myButton") as HTMLButtonElement;
 const counterDisplay = document.getElementById(
   "counterDisplay",
 ) as HTMLDivElement;
 
-// Update display function
-function updateCounter() {
-  counter++;
-  counterDisplay.textContent = `${counter} ${unitLabel}`;
+function updateDisplay() {
+  counterDisplay.textContent = `${counter.toFixed(2)} ${unitLabel}`;
 }
 
-// Increase when clicked
+// Increase by 1 on click
 button.addEventListener("click", () => {
-  updateCounter();
+  counter += 1;
+  updateDisplay();
 });
 
-// Increase automatically every second
-setInterval(() => {
-  updateCounter();
-}, 1000);
+//Animation-based auto-increment
+const ratePerSecond = 1;
+let lastTimestamp: number | null = null;
+
+function animate(timestamp: number) {
+  if (lastTimestamp === null) {
+    lastTimestamp = timestamp;
+  } else {
+    const deltaMs = timestamp - lastTimestamp;
+    lastTimestamp = timestamp;
+
+    const deltaSeconds = deltaMs / 1000;
+
+    // Grow counter based on real time elapsed
+    counter += ratePerSecond * deltaSeconds;
+    updateDisplay();
+  }
+
+  requestAnimationFrame(animate);
+}
+
+requestAnimationFrame(animate);
