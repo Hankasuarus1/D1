@@ -1,26 +1,37 @@
-import exampleIconUrl from "./noun-paperclip-7598668-00449F.png";
 import "./style.css";
 
+// Counter state
 let counter: number = 0;
 const unitLabel = "hearts";
 
+// Main container
 const container = document.createElement("div");
 
 container.innerHTML = `
-  <p>Example image asset: <img src="${exampleIconUrl}" class="icon" /></p>
   <button id="myButton">❤️</button>
   <div id="counterDisplay">0 ${unitLabel}</div>
 `;
 
 document.body.appendChild(container);
 
-//Button setup
+// Get elements
 const button = document.getElementById("myButton") as HTMLButtonElement;
 const counterDisplay = document.getElementById(
   "counterDisplay",
 ) as HTMLDivElement;
 
-button.addEventListener("click", () => {
+// Update display function
+function updateCounter() {
   counter++;
   counterDisplay.textContent = `${counter} ${unitLabel}`;
+}
+
+// Increase when clicked
+button.addEventListener("click", () => {
+  updateCounter();
 });
+
+// Increase automatically every second
+setInterval(() => {
+  updateCounter();
+}, 1000);
