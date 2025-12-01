@@ -92,29 +92,36 @@ upgradesContainer.style.border = "1px solid rgba(0,0,0,0.1)";
 upgradesContainer.style.background = "rgba(255,255,255,0.85)";
 upgradesContainer.style.boxShadow = "0 4px 10px rgba(0,0,0,0.08)";
 
-// ===== Upgrade setup =====
+// ===== Data-driven items (Step 9) =====
 
-type Upgrade = {
-  id: string;
+interface Item {
   name: string;
   cost: number;
   rate: number;
+}
+
+// You can rename cost/rate if you want, but this matches the suggested API.
+const availableItems: Item[] = [
+  { name: "Increase Beauty", cost: 10, rate: 0.1 },
+  { name: "Increase Personality", cost: 100, rate: 2 },
+  { name: "Increase Aura", cost: 1000, rate: 50 },
+];
+
+const PRICE_MULTIPLIER = 1.15;
+
+// Represent a *purchased/interactive* item in the UI
+type Upgrade = {
+  item: Item;
+  currentCost: number;
   count: number;
   button: HTMLButtonElement;
   countLabel: HTMLSpanElement;
 };
 
-const upgradeConfigs = [
-  { id: "A", name: "Increase Beauty", cost: 10, rate: 0.1 },
-  { id: "B", name: "Increase Personality", cost: 100, rate: 2.0 },
-  { id: "C", name: "Increase Aura", cost: 1000, rate: 50.0 },
-];
-
-const PRICE_MULTIPLIER = 1.15;
-
 let growthRatePerSecond = 0;
 
-const upgrades: Upgrade[] = upgradeConfigs.map((cfg) => {
+// Build upgrades UI purely from availableItems (loop, no hard-coded A/B/C)
+const upgrades: Upgrade[] = availableItems.map((item) => {
   const wrapper = document.createElement("div");
 
   wrapper.style.display = "flex";
@@ -125,7 +132,6 @@ const upgrades: Upgrade[] = upgradeConfigs.map((cfg) => {
   wrapper.style.borderBottom = "1px dashed rgba(0,0,0,0.1)";
 
   const btn = document.createElement("button");
-  btn.id = `upgrade-${cfg.id}`;
   btn.disabled = true;
 
   // style upgrade button
@@ -139,7 +145,6 @@ const upgrades: Upgrade[] = upgradeConfigs.map((cfg) => {
   btn.style.background = "#ffe4f0";
 
   const countSpan = document.createElement("span");
-  countSpan.id = `upgrade-${cfg.id}-count`;
   countSpan.style.marginLeft = "8px";
   countSpan.style.fontSize = "0.85rem";
   countSpan.style.opacity = "0.75";
@@ -149,10 +154,8 @@ const upgrades: Upgrade[] = upgradeConfigs.map((cfg) => {
   upgradesContainer.appendChild(wrapper);
 
   const up: Upgrade = {
-    id: cfg.id,
-    name: cfg.name,
-    cost: cfg.cost,
-    rate: cfg.rate,
+    item,
+    currentCost: item.cost,
     count: 0,
     button: btn,
     countLabel: countSpan,
@@ -175,15 +178,17 @@ function updateDisplay() {
 
 function updateUpgradeButtons() {
   for (const up of upgrades) {
-    up.button.disabled = counter < up.cost;
+    up.button.disabled = counter < up.currentCost;
     up.button.style.opacity = up.button.disabled ? "0.5" : "1";
   }
 }
 
 function refreshUpgradeLabel(up: Upgrade) {
   up.button.textContent =
-    `Buy ${up.name}: +${up.rate} ${unitLabel}/sec (cost: ${
-      up.cost.toFixed(2)
+    `Buy ${up.item.name}: +${up.item.rate} ${unitLabel}/sec (cost: ${
+      up.currentCost.toFixed(
+        2,
+      )
     } ${unitLabel})`;
 }
 
@@ -192,7 +197,9 @@ function refreshUpgradeCount(up: Upgrade) {
 }
 
 function updateUpgradeCounts() {
-  for (const up of upgrades) refreshUpgradeCount(up);
+  for (const up of upgrades) {
+    refreshUpgradeCount(up);
+  }
 }
 
 // ===== Manual click =====
@@ -202,14 +209,16 @@ button.addEventListener("click", () => {
   updateUpgradeButtons();
 });
 
-// ===== Upgrade purchasing =====
+// ===== Upgrade purchasing (loop-based) =====
 for (const up of upgrades) {
   up.button.addEventListener("click", () => {
-    if (counter >= up.cost) {
-      counter -= up.cost;
-      growthRatePerSecond += up.rate;
+    if (counter >= up.currentCost) {
+      counter -= up.currentCost;
+      growthRatePerSecond += up.item.rate;
       up.count += 1;
-      up.cost *= PRICE_MULTIPLIER;
+
+      // price scales by 15% each time
+      up.currentCost *= PRICE_MULTIPLIER;
 
       updateDisplay();
       refreshUpgradeCount(up);
