@@ -15,13 +15,13 @@ type Upgrade = {
   countLabel: HTMLSpanElement;
 };
 
-//  CONSTANTS
+// CONSTANTS
 
 const unitLabel = "hearts";
 let counter: number = 0;
 const PRICE_MULTIPLIER = 1.15;
 
-//  ROOT UI CREATION
+// ROOT UI CREATION
 
 const gameUI = document.createElement("div");
 
@@ -34,7 +34,7 @@ gameUI.innerHTML = `
 
 document.body.appendChild(gameUI);
 
-//  BACKGROUND — DEEP SAKURA BLOSSOM THEME
+// BACKGROUND
 
 document.body.style.background =
   "linear-gradient(160deg, #d96a9b 0%, #c85085 40%, #a93b6d 100%)";
@@ -44,7 +44,7 @@ document.body.style.display = "flex";
 document.body.style.justifyContent = "center";
 document.body.style.alignItems = "flex-start";
 
-//  DOM REFERENCES
+// DOM REFERENCES
 
 const button = document.getElementById("myButton") as HTMLButtonElement;
 const counterDisplay = document.getElementById(
@@ -53,7 +53,7 @@ const counterDisplay = document.getElementById(
 const rateDisplay = document.getElementById("rateDisplay") as HTMLDivElement;
 const upgradesContainer = document.getElementById("upgrades") as HTMLDivElement;
 
-//  UI LAYOUT STYLING
+// UI LAYOUT STYLING
 
 gameUI.style.maxWidth = "600px";
 gameUI.style.margin = "40px auto";
@@ -64,7 +64,7 @@ gameUI.style.gap = "8px";
 gameUI.style.fontFamily =
   'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
 
-//  CLICK BUTTON — HELLO KITTY PINK THEME
+// CLICK BUTTON
 
 button.style.width = "160px";
 button.style.height = "160px";
@@ -81,7 +81,7 @@ button.style.boxShadow =
   "0 12px 22px rgba(255, 180, 210, 0.6), 0 4px 8px rgba(160, 60, 100, 0.25)";
 button.style.transition = "transform 0.1s ease, box-shadow 0.1s ease";
 
-// Cute click feedback
+// click feedback
 button.addEventListener("mousedown", () => {
   button.style.transform = "scale(0.95)";
 });
@@ -116,7 +116,7 @@ upgradesContainer.style.background = "rgba(255, 240, 248, 0.2)";
 upgradesContainer.style.boxShadow =
   "0 4px 10px rgba(0,0,0,0.15), inset 0 0 20px rgba(255,255,255,0.05)";
 
-//  SHOP DATA (formerly availableItems → shopItems)
+//  SHOP DATA
 
 const shopItems: Item[] = [
   {
@@ -151,7 +151,7 @@ const shopItems: Item[] = [
   },
 ];
 
-//  BUILD SHOP UI (LOOP DRIVEN)
+// BUILD SHOP UI
 
 let growthRatePerSecond = 0;
 
@@ -210,7 +210,7 @@ const upgrades: Upgrade[] = shopItems.map((item) => {
   return up;
 });
 
-//  HELPERS
+// HELPERS
 
 function updateDisplay() {
   counterDisplay.textContent = `${counter.toFixed(2)} hearts`;
@@ -234,7 +234,7 @@ function updateUpgradeButtons() {
   }
 }
 
-//  CLICKING
+// CLICKING
 
 button.addEventListener("click", () => {
   counter += 1;
@@ -242,7 +242,7 @@ button.addEventListener("click", () => {
   updateUpgradeButtons();
 });
 
-//  PURCHASING
+// PURCHASING
 
 for (const up of upgrades) {
   up.button.addEventListener("click", () => {
@@ -259,8 +259,6 @@ for (const up of upgrades) {
     }
   });
 }
-
-//  AUTO-INCREMENT LOOP
 
 let lastTimestamp: number | null = null;
 
