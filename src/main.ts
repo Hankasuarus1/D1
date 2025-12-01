@@ -3,16 +3,16 @@ import "./style.css";
 let counter: number = 0;
 const unitLabel = "hearts";
 
-const container = document.createElement("div");
+const gameUI = document.createElement("div");
 
-container.innerHTML = `
+gameUI.innerHTML = `
   <button id="myButton">❤️</button>
   <div id="counterDisplay">0 ${unitLabel}</div>
   <div id="rateDisplay">0.00 ${unitLabel}/sec</div>
   <div id="upgrades"></div>
 `;
 
-document.body.appendChild(container);
+document.body.appendChild(gameUI);
 
 // ===== Deep Sakura Blossom Pink Background =====
 document.body.style.background =
@@ -35,13 +35,13 @@ const upgradesContainer = document.getElementById(
 // ===== Layout & Styling =====
 
 // Center layout on screen
-container.style.maxWidth = "600px";
-container.style.margin = "40px auto";
-container.style.display = "flex";
-container.style.flexDirection = "column";
-container.style.alignItems = "center";
-container.style.gap = "8px";
-container.style.fontFamily =
+gameUI.style.maxWidth = "600px";
+gameUI.style.margin = "40px auto";
+gameUI.style.display = "flex";
+gameUI.style.flexDirection = "column";
+gameUI.style.alignItems = "center";
+gameUI.style.gap = "8px";
+gameUI.style.fontFamily =
   'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
 
 // ===== HELLO KITTY PINK CLICK BUTTON =====
@@ -110,7 +110,7 @@ interface Item {
   description: string;
 }
 
-const availableItems: Item[] = [
+const shopItems: Item[] = [
   {
     name: "Increase Beauty",
     cost: 10,
@@ -156,7 +156,7 @@ type Upgrade = {
 let growthRatePerSecond = 0;
 
 // ===== Build UI for all items (loop) =====
-const upgrades: Upgrade[] = availableItems.map((item) => {
+const upgrades: Upgrade[] = shopItems.map((item) => {
   const wrapper = document.createElement("div");
   wrapper.style.display = "flex";
   wrapper.style.alignItems = "flex-start";
@@ -232,7 +232,9 @@ function updateUpgradeButtons() {
 
 function refreshUpgradeLabel(up: Upgrade) {
   up.button.textContent = `Buy ${up.item.name} (+${up.item.rate}/sec) — ${
-    up.currentCost.toFixed(2)
+    up.currentCost.toFixed(
+      2,
+    )
   } hearts`;
 }
 
