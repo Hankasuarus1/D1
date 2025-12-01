@@ -1,6 +1,6 @@
 # CMPM 121 D1 Project
 
-Inspiration from <https://noah2271.github.io/cmpm-121-incremental-nbilledo/>
+Inspiration from <https://noah2271.github.io/cmpm-121-incremental-nbilledo/> and <https://melikestuff.github.io/CMPM121-D1/>
 
 Heart Clicker Deluxe
 
